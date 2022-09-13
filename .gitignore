@@ -109,6 +109,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+postgreSql/
 
 # Spyder project settings
 .spyderproject
