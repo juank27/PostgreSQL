@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Inicio de proyecto</title>
+</head>
+<body>
+	<h1>Hola desde el Index estamos probando</h1>
+	<a href="/layaut">layaut</a>
+	<a href="/listar_personas">Listar personas</a>
+
+	<h1>REGISTRO POSTGRES</h1>
+	<form action="/guardar_persona" method="POST">
+		<label for="nombre">Nombre: </label>
+		<input type="text" name="nombre">
+		<label for="apellido">Apellido: </label>
+		<input type="text" name="apellido">
+		<label for="telefono">edad: </label>
+		<input type="number" name="edad">
+		<input type="submit" value="Enviar">
+	</form>
+	<br><br><br>
+	{% for persona in personas %}
+	<li>{{persona[0]}} -- {{persona[1]}} {{persona[2]}} {{persona[3]}} <a href="/update">editar </a>   --- <a onclick="return confirm('Desea eliminar este registro ?')" href="/delete/{{persona[0]}}">Eliminar</a>
+	{% endfor %}
+	<ul>
+</body>
+</html>

@@ -1,6 +1,9 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, flash, request, redirect
 from config import *
+
 app = Flask(__name__)
+app.secret_key = 'mysecretkey' # para poder usar flash
+
 
 con_db = get_connection()
 
@@ -47,13 +50,26 @@ def listar_personas():
 	return render_template("ver.html", personas=data)
 
 #Actualizar persona
-@app.route("/update/<id>")
+@app.route("/update/<id>", methods=['POST'])
 def get_persona(id):
+	nombre = request.form['nombre']
+	apellido = request.form['apellido']
+	edad = request.form['edad']
 	cur = con_db.cursor()
-	cur.execute("SELECT * FROM personas WHERE id=%s", (id))
-	data = cur.fetchall()
-	print(data[0])
-	return render_template("update.html", persona=data[0])
+	if nombre and apellido and edad:
+		sql = """
+			UPDATE personas
+			SET nombre = %s,
+			apellido = %s,
+			edad = %s
+			WHERE id = %s
+		"""
+		cur.execute(sql, (nombre, apellido, edad, id))
+		con_db.commit()
+		flash("Persona actualizada correctamente", "success")
+		return redirect(url_for('index'))
+	else:
+		return 'Error en la consulta'
 
 #eliminar persona
 @app.route("/delete/<id>")
@@ -61,7 +77,7 @@ def delete_persona(id):
 	cur = con_db.cursor()
 	cur.execute("DELETE FROM personas WHERE id=%s", (id))
 	con_db.commit()
-	return redirect(url_for('/'))
+	return redirect(url_for('index'))
 
 #ruta de error 404
 @app.errorhandler(404)
